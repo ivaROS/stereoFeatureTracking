@@ -1,0 +1,60 @@
+<launch>
+
+    <param name="/use_sim_time" type="bool" value="true"/>
+
+    <node pkg="rosbag" type="play" name="player" args="--clock -l -r 0.1 /home/shiyufeng/IVAL/summer2017/data/KITTI/kitti_2011_09_26_drive_0046_synced_changeFrame.bag"/>
+
+   <node pkg="nodelet" type="nodelet" name="downsample_left" args="standalone image_proc/crop_decimate">
+        <param name="decimation_x" type="int" value="4"/>  <!-- change binning_x -->
+        <param name="decimation_y" type="int" value="4"/>  <!-- change binning_y -->
+	<!--param name="width" type="int" value="480"/>
+	<param name="height" type="int" value="320"/>
+	<param name="x_offset" type="int" value="400"/>
+	<param name="y_offset" type="int" value="100"/-->
+
+        <!-- remap input topics -->
+        <remap from="camera/image_raw" to="/kitti/camera_gray_left/image_raw"/>
+        <remap from="camera/image_info" to="/kitti/camera_gray_left/scamera_info"/>
+        <!-- remap output topics -->
+        <remap from="camera_out/image_raw" to="/stereo_decimated/left/image_raw"/>
+        <remap from="camera_out/camera_info" to="/stereo_decimated/left/camera_info"/>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="downsample_right" args="standalone image_proc/crop_decimate">
+        <param name="decimation_x" type="int" value="4"/>  <!-- change binning_x -->
+        <param name="decimation_y" type="int" value="4"/>  <!-- change binning_y -->
+	<!--param name="width" type="int" value="480"/>
+	<param name="height" type="int" value="320"/>
+	<param name="x_offset" type="int" value="400"/>
+	<param name="y_offset" type="int" value="100"/-->
+
+        <!-- remap input topics -->
+        <remap from="camera/image_raw" to="/kitti/camera_gray_right/image_raw"/>
+        <remap from="camera/image_info" to="/kitti/camera_gray_right/camera_info"/>
+        <!-- remap output topics -->
+        <remap from="camera_out/image_raw" to="/stereo_decimated/right/image_raw"/>
+        <remap from="camera_out/camera_info" to="/stereo_decimated/right/camera_info"/>
+    </node>
+
+    <node pkg="elas_ros" type="elas_ros" name="elas_ros">
+	<remap from="/stereo/left/image" to="/stereo_decimated/left/image_raw"/>
+	<remap from="/stereo/left/camera_info" to="/stereo_decimated/left/camera_info"/>
+	<remap from="/stereo/right/image" to="/stereo_decimated/right/image_raw"/>
+	<remap from="/stereo/right/camera_info" to="/stereo_decimated/right/camera_info"/>
+	<param name="approximate_sync" value="true"/>
+	<param name="queue_size" value="12"/>
+    </node>
+
+    <node pkg="stereo_localmap" type="local_octomap_generator" name="local_octomap_generator">
+	<remap from="/points2" to="/elas_ros/point_cloud"/>
+    </node>
+
+    <node pkg="image_view" type="disparity_view" name="show_disparity" args="image:=/elas_ros/disparity"/>
+
+    <node pkg="image_view" type="image_view" name="show_left_image" args="image:=/stereo_decimated/left/image_raw"/>
+    <node pkg="image_view" type="image_view" name="show_right_image" args="image:=/stereo_decimated/right/image_raw"/>
+
+    <node pkg="rviz" type="rviz" name="show_point_cloud" args="-d $(find stereo_localmap)/rviz/elas_stereo2octomap.rviz"/>
+
+    <!-- node "Other package related nodes" / -->
+</launch>

@@ -1,0 +1,19 @@
+<launch>
+    <node pkg="rosbag" type="play" name="player" args="--clock -l /home/shiyufeng/IVAL/summer2017/data/KITTI/kitti_2011_09_26_drive_0001_extract.bag"/>
+
+    <node pkg="stereo_image_proc" type="stereo_image_proc" name="stereo_image_proc">
+	<remap from="left/image_raw" to="cam00/image_raw"/>
+	<remap from="left/camera_info" to="cam00/camera_info"/>
+	<remap from="right/image_raw" to="cam01/image_raw"/>
+	<remap from="right/camera_info" to="cam01/camera_info"/>
+	
+	<param name="approximate_sync" value="true"/>
+	<param name="queue_size" value="15"/>
+    </node>
+
+    <node pkg="image_view" type="stereo_view" name="show_image" args="stereo:= image:=/image_rect"/>
+
+    <!--node pkg="image_view" type="image_view" name="show_left_image" args="image:=/stereo/left/image_mono"/-->
+
+    <!-- node "Other package related nodes" / -->
+</launch>

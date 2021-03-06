@@ -1,0 +1,10 @@
+<launch>
+
+    <node pkg="sparse_stereo" type="pips_sparse_stereo_node" name="sparse_stereo" output="screen" >
+        <remap from="/camera/left/image_raw" to="/duo3d/left/image_rect"/>
+        <remap from="/camera/left/camera_info" to="/duo3d/left/camera_info"/>
+        <remap from="/camera/right/image_raw" to="/duo3d/right/image_rect"/>
+        <remap from="/camera/right/camera_info" to="/duo3d/right/camera_info"/>
+    </node>
+
+</launch>	

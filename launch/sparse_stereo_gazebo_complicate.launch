@@ -1,0 +1,45 @@
+<launch>
+    <include file="$(find pips_trajectory_testing)/launch/gazebo.launch"/>
+
+    <node pkg="sparse_stereo" type="sparse_stereo_opencv_matching" name="sparse_stereo">
+	<remap from="/kitti/camera_gray_left/image_raw" to="/multisense_sl/camera/left/image_raw"/>
+        <remap from="/kitti/camera_gray_left/camera_info" to="/multisense_sl/camera/left/camera_info"/>
+	<remap from="/kitti/camera_gray_right/image_raw" to="/multisense_sl/camera/right/image_raw"/>
+        <remap from="/kitti/camera_gray_right/camera_info" to="/multisense_sl/camera/right/camera_info"/>
+    </node>
+
+    <node pkg="sparse_stereo" type="local_octomap_generator" name="octomap">
+	<remap from="/points2" to="/sparse_points2"/>
+    </node>
+
+    <!--node pkg="baseline_testing" type="octomap_controller_node" name="navigation">
+	<remap from="camera/depth/points" to="/sparse_points2"/>
+    </node-->
+
+    <node pkg="nodelet" type="nodelet" name="disparity" args="standalone stereo_image_proc/disparity">
+	<remap from="left/image_rect" to="/multisense_sl/camera/left/image_raw"/>
+	<remap from="left/camera_info" to="/multisense_sl/camera/left/camera_info"/>
+	<remap from="right/image_rect" to="/multisense_sl/camera/right/image_raw"/>
+	<remap from="right/camera_info" to="/multisense_sl/camera/right/camera_info"/>
+
+	<param name="approximate_sync" type="bool" value="true"/>
+	<param name="queue_size" type="int" value="12"/>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="pointcloud" args="standalone stereo_image_proc/point_cloud2">
+	<remap from="left/image_rect_color" to="/multisense_sl/camera/left/image_raw"/>
+	<remap from="left/camera_info" to="/multisense_sl/camera/left/camera_info"/>
+	<remap from="right/camera_info" to="/multisense_sl/camera/right/camera_info"/>
+
+	<param name="approximate_sync" type="bool" value="true"/>
+	<param name="queue_size" type="int" value="12"/>
+    </node>
+
+    <node pkg="image_view" type="disparity_view" name="show_disparity" args="image:=/disparity"/>
+
+    <node pkg="image_view" type="image_view" name="show_left_image" args="image:=/multisense_sl/camera/left/image_raw"/>
+    <node pkg="image_view" type="image_view" name="show_right_image" args="image:=/multisense_sl/camera/right/image_raw"/>
+
+    <node pkg="rviz" type="rviz" name="show_pc" args="-d $(find sparse_stereo)/rviz/sparse_stereo_gazebo.rviz"/>
+
+</launch>

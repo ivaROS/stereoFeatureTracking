@@ -1,0 +1,12 @@
+<launch>
+
+    <arg name="config_file_path" default="$(find sparse_stereo)/config/config.yaml"/>
+
+    <node pkg="sparse_stereo" type="pips_sparse_stereo_node" name="sparse_stereo" >
+        <param name="queue_size" value="50"/>
+        <param name="config_file" value="$(arg config_file_path)"/>
+    </node>
+
+</launch>	
+
+<!--launch-prefix="xterm -e gdb -ex run - -args"-->

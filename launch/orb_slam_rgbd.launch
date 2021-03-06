@@ -1,0 +1,21 @@
+<launch>
+    <arg name="config_path" default="/home/shiyu/stixel_catkin_ws/src/ORB_Data"/>
+    
+    <arg name="voc_file_path" default="$(arg config_path)/ORBvoc.bin"/>
+    <arg name="config_file_path" default="$(find sparse_stereo)/config/kinect_turtlebot_rgbd.yaml"/>
+    <!--<arg name="config_file_path" default="$(arg config_path)/MYNT_yaml/mynteye_stereo_v2.yaml"/>-->
+
+    <node pkg="sparse_stereo" type="orb_slam_rgbd_node" name="ORB_SLAM" output="screen" >
+        <param name="queue_size" value="50"/>
+        <param name="local_frame" value="camera_depth_optical_frame"/>
+        <param name="vocab_file" value="$(arg voc_file_path)"/>
+        <param name="config_file" value="$(arg config_file_path)"/>
+        <param name="num_features" type="int" value="400"/>
+        <param name="rectify" type="bool" value="false"/>
+        <param name="visualization" type="bool" value="false"/>
+    </node>
+
+</launch>	
+
+<!--launch-prefix="xterm -e gdb -ex run - -args"-->
+

@@ -1,0 +1,17 @@
+<launch>
+
+    <!--param name="/use_sim_time" type="bool" value="true"/-->
+
+    <node pkg="rosbag" type="play" name="player" args="--clock -l /home/shiyufeng/catkin_ws/src/bag/test_2017-09-15-16-15-51.bag"/>
+
+    <node pkg="sparse_stereo" type="sparse_stereo_opencv_matching" name="sparse_stereo" output="screen">
+	<remap from="/kitti/camera_gray_left/image_raw" to="/stereo/left/image_rect"/>
+        <remap from="/kitti/camera_gray_left/camera_info" to="/stereo/left/camera_info"/>
+	<remap from="/kitti/camera_gray_right/image_raw" to="/stereo/right/image_rect"/>
+        <remap from="/kitti/camera_gray_right/camera_info" to="/stereo/right/camera_info"/>
+    </node>
+
+    <node pkg="image_view" type="image_view" name="show_left_image" args="image:=/matching_result"/>
+
+    <!-- node "Other package related nodes" / -->
+</launch>

@@ -1,0 +1,11 @@
+*.kdev4
+.kdev4/*
+
+stvo/3rdparty/line_descriptor/build/*
+stvo/3rdparty/line_descriptor/lib/*
+
+stvo/3rdparty/DBoW2/build/*
+stvo/3rdparty/DBoW2/lib/*
+
+stvo/build/*
+stvo/lib/*

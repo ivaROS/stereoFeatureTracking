@@ -1,0 +1,9 @@
+<launch>
+    <node pkg="rosbag" type="play" name="play" args=" $(find sparse_stereo)/bag/test_2017-09-14-19-25-09.bag">
+	<remap from="/depth" to="/test/depth"/>
+	<remap from="/camera_info" to="/test/camera_info"/>
+	<remap from="/tf" to="/test/tf"/>
+	<remap from="/tf_static" to="/test/tf_static"/>
+	<remap from="/sparse_points2" to="/test/sparse_points2"/>
+    </node>
+</launch>

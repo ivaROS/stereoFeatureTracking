@@ -1,0 +1,7 @@
+<launch>
+
+    <node pkg="baseline_testing" type="octomap_controller_node" name="navigation">
+	<remap from="camera/depth/points" to="/sparse_points2"/>
+    </node>
+
+</launch>

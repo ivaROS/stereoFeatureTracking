@@ -1,0 +1,24 @@
+<launch>
+
+    <!--param name="/use_sim_time" type="bool" value="true"/-->
+
+    <include file="$(find stereo_localmap)/launch/kitti_sync_global_octomap.launch"/>
+
+    <node pkg="octomap_server" type="octomap_server_node" name="point2octomap">
+	<remap from="cloud_in" to="/points2"/>
+	<param name="resolution" type="double" value="0.1"/>
+
+	<!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
+    	<param name="frame_id" type="string" value="world" />
+
+    	<!-- maximum range to integrate (speedup!) -->
+    	<param name="sensor_model/max_range" value="50.0" />
+
+    	<param name="latch" value="false" />
+	<param name="pointcloud_min_z" value="0.0"/>
+	<param name="pointcloud_max_z" value="10.0"/>
+
+    </node>  
+   
+    <!-- node "Other package related nodes" / -->
+</launch>

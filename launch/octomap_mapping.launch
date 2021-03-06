@@ -1,0 +1,10 @@
+<launch>
+	<include file="$(find stereo_localmap)/launch/stereo2pointcloud_kitti_sync.launch"/>
+
+	<!--node pkg="baseline_testing" type="octomap_tester" name="octomap_generator">
+		<remap from="/camera/depth/points" to="/points2"/>
+	</node-->
+
+	<node pkg="stereo_localmap" type="local_octomap_generator" name="local_octomap_generator"/>
+	<!-- <launch-prefix="xterm -e gdb args"/> -->
+</launch>
